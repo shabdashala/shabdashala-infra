@@ -1,6 +1,6 @@
 server {
   listen       443 ssl;
-	server_name  dev.shabdashala.com;
+	server_name  local.shabdashala.com;
 
 	ssl_certificate     certificates/wild.shabdashala.com.crt;
 	ssl_certificate_key certificates/wild.shabdashala.com.key;
@@ -10,16 +10,6 @@ server {
 
   ssl_ciphers  HIGH:!aNULL:!MD5;
   ssl_prefer_server_ciphers  on;
-
-  location = /favicon.ico { access_log off; log_not_found off; }
-
-  location /static {
-    alias /home/ubuntu/shabdashala-backend/backend/static_files;
-  }
-
-  location /media {
-    alias /home/ubuntu/shabdashala-backend/backend/media_files;
-  }
 
   location / {
     proxy_set_header   X-Forwarded-For $remote_addr;
@@ -33,13 +23,13 @@ server {
 }
 
 server {
-  if ($host = dev.shabdashala.com) {
+  if ($host = local.shabdashala.com) {
     return 301 https://$host$request_uri;
   }
 
 	listen 80 ;
 	listen [::]:80 ;
 
-  server_name dev.shabdashala.com;
+  server_name local.shabdashala.com;
   return 404;
 }

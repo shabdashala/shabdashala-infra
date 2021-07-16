@@ -27,6 +27,7 @@ server {
     uwsgi_read_timeout 1200s;
     uwsgi_send_timeout 1200s;
 
+    # proxy_pass         "http://127.0.0.1:8000";
     proxy_redirect          off;
     proxy_read_timeout       1200s;
     proxy_connect_timeout    1200s;
