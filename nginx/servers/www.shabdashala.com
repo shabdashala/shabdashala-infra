@@ -1,18 +1,17 @@
 server {
-  listen       443 ssl;
-	server_name  www.shabdashala.com;
+  server_name www.shabdashala.com;
+  listen [::]:443 ssl;
+  listen 443 ssl http2;
+  ssl_certificate /etc/letsencrypt/live/www.shabdashala.com/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/www.shabdashala.com/privkey.pem;
 
-	ssl_certificate     certificates/wild.shabdashala.com.crt;
-	ssl_certificate_key certificates/wild.shabdashala.com.key;
+  include /etc/letsencrypt/options-ssl-nginx.conf;
+  ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 
-  ssl_session_cache    shared:SSL:1m;
-  ssl_session_timeout  5m;
-
-  ssl_ciphers  HIGH:!aNULL:!MD5;
-  ssl_prefer_server_ciphers  on;
+  access_log /var/log/nginx/www-shabdashala-com.access.log;
+  error_log /var/log/nginx/www-shabdashala-com.error.log;
 
   location = /favicon.ico { access_log off; log_not_found off; }
-
   location /static {
     alias /home/ubuntu/shabdashala-backend/backend/static_files;
   }
@@ -22,13 +21,19 @@ server {
   }
 
   location / {
-    proxy_set_header   X-Forwarded-For $remote_addr;
-    proxy_set_header   Host $http_host;
-    proxy_pass         "http://127.0.0.1:8000";
+    uwsgi_pass              unix:/run/uwsgi/www-shabdashala-com.sock;
+    include uwsgi_params;
 
-    proxy_read_timeout      1200s;
-    proxy_connect_timeout   1200s;
-    proxy_send_timeout      1200s;
+    uwsgi_read_timeout 1200s;
+    uwsgi_send_timeout 1200s;
+
+    proxy_redirect          off;
+    proxy_read_timeout       1200s;
+    proxy_connect_timeout    1200s;
+
+    proxy_set_header Host $http_host;
+    proxy_set_header X-Forwarded-Proto https;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
   }
 }
 
