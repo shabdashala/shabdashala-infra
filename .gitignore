@@ -1,0 +1,40 @@
+*.py[co]
+.idea/
+.vscode/
+
+/workspace/
+
+.DS_Store
+*~
+/logs/
+
+# Installer logs
+pip-log.txt
+logs/
+*.log
+*.numbers
+
+# Unit test / coverage reports
+.coverage
+.tox
+.log
+
+# special files
+ignore*
+*.swp
+
+# py.test
+*.cache/
+*__pycache__/*
+htmlcov/
+
+# vagrant
+.vagrant/
+
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# testing
+/coverage
+
+# production
+/build
